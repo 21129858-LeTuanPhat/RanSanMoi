@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        .content{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .table_id{
+            margin-top: 50px;
+            border-spacing: 4px;
+        }
+        td{
+            width: 20px;
+            height: 20px;
+            border: 2px solid #000;
+
+        }
+
+
+
+
+    </style>
+</head>
+
+<body>
+        <div class="content">
+            <table class="table_id">
+            </table>
+        </div>
+
+
+
+
+</body>
+
+        <script>
+            const snake ={
+                list:[],
+                way:0
+            }
+            var x;
+            var y;
+            var checkGameOver=true;
+            tableContent= document.querySelector('.table_id')
+                function start(){
+                    init()
+                    const gameLoop =   setInterval(()=>{
+                        ranDiChuyen()
+                        anMoiRan()
+                        gameOver()
+                        if(checkGameOver==false){
+                            clearInterval(gameLoop)
+                            console.log("Game Over")
+                        }
+                    },100)
+                bodyx =document.querySelector('body')
+                bodyx.onkeydown = function(e){
+                    switch(e.keyCode){
+                        case 38:
+                        case 40:
+                            if (snake.way === 1 || snake.way === 3) {
+                                snake.way = (e.keyCode === 38) ? 0 : 2;
+                            }
+                            break;
+                        case 39:
+                        default:
+                            if (snake.way === 0 || snake.way === 2) {
+                                snake.way = (e.keyCode === 39) ? 1 : 3;
+                            }
+                            break;
+                    }
+                }
+            }
+
+            function anMoiRan() {
+                while (snake.list.some(function (item) {
+                    return item.i == x && item.j == y;
+                })) {
+                    tail = snake.list[snake.list.length-1];
+                    var newTail = {
+                        i:tail.i,
+                        j:tail.j,
+                    }
+                    switch(snake.way){
+                        case 0:
+                            newTail.i = tail.i +1;
+                            break;
+                        case 1:
+                            newTail.j = tail.j -1;
+                            break;
+                        case 2:
+                            newTail.i = tail.i - 1;
+                            break;
+                        default:
+                            newTail.j = tail.j + 1;
+                            break;
+                    }
+                    if (newTail.i < 0) newTail.i = 0;
+                    if (newTail.i > 19) newTail.i = 19;
+                    if (newTail.j < 0) newTail.j = 0;
+                    if (newTail.j > 19) newTail.j = 19;
+
+                    snake.list.push(newTail)
+                    for (var i = 0; i < snake.list.length; i++) {
+                        x = Math.floor(Math.random() * 20)
+                        y = Math.floor(Math.random() * 20)
+                        if (snake.list[i].i != x || snake.list[i].j != y) {
+                            moiRan = document.querySelector(`[class="${x}-${y}"]`)
+                            moiRan.style.backgroundColor = 'green'
+                            return
+                        }
+                    }
+                }
+            }
+
+            function ranDiChuyen (){
+                switch(snake.way){
+                    case 0:
+                        console.log(snake.list);
+
+                        for (const item of snake.list){
+                            document.querySelector(`[class="${item.i}-${item.j}"]`).style.backgroundColor ='white'
+                        }
+                        let prevPosition0 = snake.list.map(function(item){
+                            return ({i:item.i,j:item.j});
+                        })
+                        snake.list[0].i--;
+                        if(snake.list[0].i <0){
+                            snake.list[0].i =19;
+                        }
+                        for(var i=1;i<snake.list.length;i++){
+                            snake.list[i].i=prevPosition0[i-1].i;
+                            snake.list[i].j=prevPosition0[i-1].j;
+                        }
+                        const head =snake.list[0]
+                        document.querySelector(`[class="${head.i}-${head.j}"]`).style.backgroundColor ='red'
+                        for (var i=1;i < snake.list.length;i++){
+                            document.querySelector(`[class="${snake.list[i].i}-${snake.list[i].j}"]`).style.backgroundColor='blue';
+                        }
+
+                        break;
+                    case 1:
+                        console.log(snake.list);
+                        for (const item of snake.list){
+                            document.querySelector(`[class="${item.i}-${item.j}"]`).style.backgroundColor ='white'
+                        }
+                        let prevPosition1 = snake.list.map(function(item){
+                            return ({i:item.i,j:item.j});
+                        })
+
+                        snake.list[0].j++;
+                        if(snake.list[0].j >19){
+                            snake.list[0].j =0;
+                        }
+                        for(var i=1;i<snake.list.length;i++){
+                            snake.list[i].i=prevPosition1[i-1].i;
+                            snake.list[i].j=prevPosition1[i-1].j;
+                        }
+                        const head1 =snake.list[0]
+                        document.querySelector(`[class="${head1.i}-${head1.j}"]`).style.backgroundColor ='red'
+                        for (var i=1;i < snake.list.length;i++){
+                            document.querySelector(`[class="${snake.list[i].i}-${snake.list[i].j}"]`).style.backgroundColor='blue';
+                        }
+
+                        break;
+                    case 2:
+                        console.log(snake.list);
+                        for (const item of snake.list) {
+                            document.querySelector(`[class="${item.i}-${item.j}"]`).style.backgroundColor ='white'
+                        }
+                        let prevPosition2 = snake.list.map(function(item){
+                            return ({i:item.i,j:item.j});
+                        })
+                        snake.list[0].i++;
+                        if(snake.list[0].i >19){
+                            snake.list[0].i =0;
+                        }
+                        for(var i=1;i < snake.list.length;i++){
+                            snake.list[i].i=prevPosition2[i-1].i;
+                            snake.list[i].j=prevPosition2[i-1].j;
+                        }
+                        const head2 =snake.list[0]
+                        document.querySelector(`[class="${head2.i}-${head2.j}"]`).style.backgroundColor ='red'
+                        for (var i=1;i < snake.list.length;i++){
+                            document.querySelector(`[class="${snake.list[i].i}-${snake.list[i].j}"]`).style.backgroundColor='blue';
+                        }
+
+                        break;
+                    default :
+                        console.log(snake.list);
+                        for (const item of snake.list) {
+                            document.querySelector(`[class="${item.i}-${item.j}"]`).style.backgroundColor ='white'
+                        }
+                        let prevPosition3 = snake.list.map(function(item){
+                            return ({i:item.i,j:item.j});
+                        })
+                        snake.list[0].j-- ;
+                        if(snake.list[0].j < 0){
+                            snake.list[0].j =19;
+                        }
+                        for(var i=1;i<snake.list.length;i++){
+                            snake.list[i].i=prevPosition3[i-1].i;
+                            snake.list[i].j=prevPosition3[i-1].j;
+                        }
+                        const head3 =snake.list[0]
+                        document.querySelector(`[class="${head3.i}-${head3.j}"]`).style.backgroundColor ='red'
+                        for (var i=1;i < snake.list.length;i++){
+                            document.querySelector(`[class="${snake.list[i].i}-${snake.list[i].j}"]`).style.backgroundColor='blue';
+                        }
+                        break;
+                }
+            }
+
+            function init(){
+                for (let i = 0; i <20 ; i++) {
+                    tr = document.createElement('tr');
+                    for(let j=0; j<20;j++){
+                        td=document.createElement('td');
+                        td.classList.add(i+"-"+j)
+                        tr.appendChild(td);
+                    }
+                    tableContent.appendChild(tr);
+                }
+
+                    i=Math.floor(Math.random()*10);
+                    j=Math.floor(Math.random()*10);
+                    anMoi()
+                    ranmoi1=document.querySelector(`[class="${i}-${j}"]`)
+                    ranmoi1.style.backgroundColor='blue';
+                    x_1=i+1
+                    x_2=i+2
+                    ranmoi2=document.querySelector(`[class="${x_1}-${j}"]`)
+                    ranmoi2.style.backgroundColor='blue';
+                    snake.list.push({i:i,j:j})
+                    snake.list.push({i:x_1,j:j})
+                    snake.list.push({i:x_2,j:j})
+
+            }
+            function anMoi(){
+                do{
+                    x=Math.floor(Math.random()*20);
+                    y=Math.floor(Math.random()*20);
+                }while(x==i || y==j);
+                moiRan=document.querySelector(`[class="${x}-${y}"]`)
+                moiRan.style.backgroundColor ='green'
+            }
+            function gameOver(){
+                var head = snake.list[0]
+                    for(var j=1;j<snake.list.length;j++){
+                        if(head.i==snake.list[j].i && head.j==snake.list[j].j){
+                            console.log('game Over')
+                            checkGameOver=false;
+                            return;
+                        }
+                    }
+
+            }
+
+            start()
+        </script>
+
+
+
+
+
+
+</html>
